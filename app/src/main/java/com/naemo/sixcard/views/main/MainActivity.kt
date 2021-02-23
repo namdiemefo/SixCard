@@ -61,4 +61,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     override fun showSnackBarMsg(msg: String) {
         appUtils?.showSnackBar(this, main_frame, msg)
     }
+
+    override fun showDialog() {
+        appUtils?.showDialog(this)
+    }
+
+    override fun cancelDialog() {
+        appUtils?.cancelDialog()
+    }
 }

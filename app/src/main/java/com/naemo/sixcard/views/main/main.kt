@@ -44,15 +44,16 @@ class MainViewModel(application: Application) : BaseViewModel<MainNavigator>(app
         } else if (cardNumber.length > 8) {
             getNavigator()?.showSnackBarMsg("Card must be at least 8 digits")
         } else {
-
+            getNavigator()?.showDialog()
             var binListCall: Call<BinList> = client.getApi().check(cardNumber.toInt())
             binListCall.enqueue(object : Callback<BinList> {
                 override fun onFailure(call: Call<BinList>, t: Throwable) {
+                    getNavigator()?.cancelDialog()
                     getNavigator()?.showSnackBarMsg(t.toString())
                 }
 
                 override fun onResponse(call: Call<BinList>, response: Response<BinList>) {
-
+                    getNavigator()?.cancelDialog()
                     if (response.isSuccessful || response.code() == 200) {
                         val data = response.body()
                         data?.let { setCard(it) }
@@ -74,6 +75,7 @@ class MainViewModel(application: Application) : BaseViewModel<MainNavigator>(app
         bank.set(it.bank?.name)
         country.set(it.country?.name)
         cardLength.set(it.number?.length.toString())
+        prepaid.set(it.prepaid.toString())
     }
 
 
@@ -84,6 +86,10 @@ interface MainNavigator {
     fun searchForCardDetails()
 
     fun showSnackBarMsg(msg: String)
+
+    fun showDialog()
+
+    fun cancelDialog()
 
 
 }
